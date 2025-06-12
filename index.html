@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO DO LIST</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1 class="page-title">TO DO LIST</h1>
+    <div class="task-board">
+        <div class="task-column" id="todo" data-status="todo">
+            <h2>To Do <button class="add-task-btn" onclick="showPopup()">Add New Task</button> <span class="task-count" id="todo-count">0</span></h2>
+            <div class="task-container"></div>
+        </div>
+        <div class="task-column" id="inprogress" data-status="inprogress">
+            <h2>In Progress <span class="task-count" id="inprogress-count">0</span></h2>
+            <div class="task-container"></div>
+        </div>
+        <div class="task-column" id="done" data-status="done">
+            <h2>Done <span class="task-count" id="done-count">0</span></h2>
+            <div class="task-container"></div>
+        </div>
+    </div>
+    <div class="popup" id="task-popup">
+        <div class="popup-content">
+            <input type="text" id="task-title" placeholder="Task title" maxlength="100" required>
+            <textarea id="task-description" placeholder="Task description (optional)" maxlength="500"></textarea>
+            <button onclick="addTask()">Add Task</button>
+            <button class="close-popup" onclick="closePopup()">Cancel</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
