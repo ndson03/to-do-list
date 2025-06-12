@@ -1,0 +1,107 @@
+sequenceDiagram
+    participant UI as User Interface
+    participant JS as JavaScript Functions
+    participant API as Backend API
+
+    UI->>JS: Submit task form
+    JS->>JS: addTask()
+    JS->>UI: Check if title is empty
+    alt Title empty
+        JS->>UI: Show alert "Title is required"
+    else Title valid
+        JS->>API: fetchTasks("todo")
+        API-->>JS: Return todo tasks
+        JS->>JS: Calculate new task order
+        JS->>API: POST new task to API_URL
+        API-->>JS: Confirm task creation
+        JS->>JS: closePopup()
+        JS->>UI: Hide popup, clear inputs
+        JS->>JS: renderTasks()
+        JS->>API: fetchTasks() for all statuses
+        API-->>JS: Return tasks
+        JS->>UI: Update task columns and counts
+    end
+    alt Error occurs
+        JS->>JS: Log error
+    end
+
+
+
+sequenceDiagram
+    participant UI as User Interface
+    participant JS as JavaScript Functions
+    participant API as Backend API
+
+    UI->>JS: Page load or trigger refresh
+    JS->>JS: renderTasks()
+    JS->>API: fetchTasks("todo")
+    API-->>JS: Return todo tasks
+    JS->>API: fetchTasks("inprogress")
+    API-->>JS: Return inprogress tasks
+    JS->>API: fetchTasks("done")
+    API-->>JS: Return done tasks
+    alt Error in fetchTasks
+        JS->>JS: Log error, return empty array
+    end
+    JS->>UI: Clear existing tasks in columns
+    JS->>UI: Render tasks in todo column
+    JS->>UI: Render tasks in inprogress column
+    JS->>UI: Render tasks in done column
+    JS->>UI: Update task counts for each column
+
+
+
+sequenceDiagram
+    participant UI as User Interface
+    participant JS as JavaScript Functions
+    participant API as Backend API
+
+    UI->>JS: Drag task to new position/column
+    JS->>JS: Sortable.onEnd(evt)
+    JS->>JS: updateTask(taskId, newStatus, newIndex)
+    JS->>API: PATCH API_URL/taskId with {status, order}
+    API-->>JS: Confirm task update
+    JS->>JS: updateColumnOrder(toColumn)
+    loop For each task in toColumn
+        JS->>API: PATCH API_URL/taskId with new order
+        API-->>JS: Confirm order update
+    end
+    alt Different columns
+        JS->>JS: updateColumnOrder(fromColumn)
+        loop For each task in fromColumn
+            JS->>API: PATCH API_URL/taskId with new order
+            API-->>JS: Confirm order update
+        end
+    end
+    JS->>JS: renderTasks()
+    JS->>API: fetchTasks() for all statuses
+    API-->>JS: Return tasks
+    JS->>UI: Update task columns and counts
+    alt Error occurs
+        JS->>JS: Log error
+    end
+
+
+
+
+sequenceDiagram
+    participant UI as User Interface
+    participant JS as JavaScript Functions
+    participant API as Backend API
+
+    UI->>JS: Click delete button
+    JS->>JS: deleteTask(id)
+    JS->>UI: Show confirmation dialog
+    alt User confirms
+        JS->>API: DELETE API_URL/id
+        API-->>JS: Confirm deletion
+        JS->>JS: renderTasks()
+        JS->>API: fetchTasks() for all statuses
+        API-->>JS: Return tasks
+        JS->>UI: Update task columns and counts
+    else User cancels
+        JS->>JS: Exit
+    end
+    alt Error occurs
+        JS->>JS: Log error
+    end
