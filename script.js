@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/tasks";
+const API_URL = "http://localhost:3001/tasks";
 
 function showPopup() {
   document.getElementById("task-popup").style.display = "flex";
@@ -148,8 +148,10 @@ async function updateColumnOrder(column) {
 document.querySelectorAll(".task-column .task-container").forEach((column) => {
   new Sortable(column, {
     group: "tasks",
-    animation: 150,
-    ghostClass: "sortable-ghost",
+    multiDrag: true,
+    selectedClass: 'task-selected',
+    animation: 300,
+
     onEnd: async function (evt) {
       const taskId = evt.item.dataset.id;
       const toColumn = evt.to;
@@ -161,7 +163,6 @@ document.querySelectorAll(".task-column .task-container").forEach((column) => {
       if (fromColumn !== toColumn) {
         await updateColumnOrder(fromColumn);
       }
-      await renderTasks();
     },
   });
 });
